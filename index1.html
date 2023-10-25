@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>To-Do List</title>
+    <style>
+        body {
+            background-image: url("do.webp");
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        #todo-container {
+            background-color: #2f2d2d;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+        }
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        input[type="text"] {
+            width: 200px;
+        }
+        .completed {
+            text-decoration: line-through;
+            color: #999;
+        }
+        .color-picker {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #8e3434;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="todo-container">
+        <h1>My To-Do List</h1>
+        <input type="text" id="newTask" placeholder="Add a new task">
+        <input type="color" id="taskColor" value="#ff5733">
+        <input type="date" id="dueDate">
+        <button id="addTask">Add</button>
+        <button id="clearCompleted">Clear Completed</button>
+        <ul id="taskList">
+            <li>
+                <input type="checkbox" class="taskCheckbox" id="task1">
+                <label for="task1">Task 1</label>
+                <button class="deleteTask">Delete</button>
+                <input type="color" class="color-picker" value="#ff5733">
+                <span class="due-date">Due: </span>
+            </li>
+        </ul>
+    </div>
+
+    <script>
+        const newTaskInput = document.getElementById('newTask');
+        const taskColorInput = document.getElementById('taskColor');
+        const dueDateInput = document.getElementById('dueDate');
+        const addTaskButton = document.getElementById('addTask');
+        const clearCompletedButton = document.getElementById('clearCompleted');
+        const taskList = document.getElementById('taskList');
+
+        addTaskButton.addEventListener('click', function () {
+            const taskText = newTaskInput.value;
+            const taskColor = taskColorInput.value;
+            const dueDate = dueDateInput.value;
+
+            if (taskText) {
+                const taskId = 'task' + (taskList.childElementCount + 1);
+                const newTaskItem = document.createElement('li');
+                newTaskItem.innerHTML = `
+                    <input type="checkbox" class="taskCheckbox" id="${taskId}">
+                    <label for="${taskId}" style="color: ${taskColor}">${taskText}</label>
+                    <button class="deleteTask">Delete</button>
+                    <input type="color" class="color-picker" value="${taskColor}">
+                    <span class="due-date">${dueDate ? `Due: ${dueDate}` : ''}</span>
+                `;
+                taskList.appendChild(newTaskItem);
+                newTaskInput.value = '';
+            }
+        });
+
+        clearCompletedButton.addEventListener('click', function () {
+            const completedTasks = document.querySelectorAll('.taskCheckbox:checked');
+            completedTasks.forEach(task => {
+                task.parentElement.remove();
+            });
+        });
+
+        taskList.addEventListener('click', function (e) {
+            if (e.target.classList.contains('deleteTask')) {
+                e.target.parentElement.remove();
+            } else if (e.target.classList.contains('taskCheckbox')) {
+                e.target.nextElementSibling.classList.toggle('completed');
+            }
+        });
+    </script>
+</body>
+</html>
+
